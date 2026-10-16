@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agora, aqui</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1d3557">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+  :root { --fundo:#f6f4ef; --texto:#1b1b1b; --suave:#5c5c5c; --cartao:#fff; --borda:#ddd8cc; --acento:#1d3557; --ok:#2a7a46; --nao:#9b2c2c; --aviso:#8a5a00; }
+  @media (prefers-color-scheme: dark) { :root { --fundo:#141414; --texto:#eee; --suave:#a8a8a8; --cartao:#1e1e1e; --borda:#333; --acento:#8fb4e8; --ok:#6fcf8f; --nao:#e88; --aviso:#e8b85a; } }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:16px; background:var(--fundo); color:var(--texto); font:17px/1.45 system-ui, sans-serif; max-width:560px; margin-inline:auto; }
+  header { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  #situacao { color:var(--suave); font-size:14px; margin-bottom:12px; }
+  .cartao { background:var(--cartao); border:1px solid var(--borda); border-radius:14px; padding:14px 16px; margin:12px 0; }
+  .cartao h2 { font-size:18px; margin:0 0 6px; }
+  .porque { font-size:13px; color:var(--suave); margin:0 0 8px; }
+  .faca { margin:8px 0; padding-left:20px; }
+  .frase { border-left:3px solid var(--acento); padding:6px 10px; margin:10px 0; }
+  .frase b { display:block; font-size:18px; }
+  .frase span { color:var(--suave); font-size:14px; }
+  .incerteza, .validade { font-size:13px; color:var(--aviso); margin:6px 0; }
+  .fonte { font-size:13px; color:var(--suave); }
+  .fonte a { color:var(--acento); }
+  .botoes { display:flex; gap:8px; margin-top:10px; }
+  button { font:inherit; font-size:15px; padding:8px 12px; border-radius:10px; border:1px solid var(--borda); background:transparent; color:var(--texto); }
+  button.sim { border-color:var(--ok); color:var(--ok); }
+  button.nao { border-color:var(--nao); color:var(--nao); }
+  .resposta { display:none; margin-top:10px; }
+  .resposta.aberta { display:block; }
+  .resposta textarea { width:100%; min-height:70px; font:inherit; font-size:15px; padding:8px; border-radius:10px; border:1px solid var(--borda); background:var(--fundo); color:var(--texto); }
+  .resposta button { margin-top:6px; }
+  .grafico-chuva { width:100%; height:auto; color:var(--texto); margin-top:8px; }
+  .mapa-chuva { height:240px; border-radius:10px; margin-top:6px; }
+  .controle-chuva { display:flex; align-items:center; gap:8px; margin-top:6px; font-size:14px; }
+  .controle-chuva input { flex:1; }
+  .maturidade { font-size:12px; color:var(--suave); margin-left:auto; align-self:center; }
+  details { margin-top:16px; font-size:14px; color:var(--suave); }
+  label { display:block; margin:6px 0; }
+  select { font:inherit; }
+</style>
+</head>
+<body>
+<header><h1>Agora, aqui</h1><button id="atualizar">↻</button></header>
+<div id="situacao">lendo a sua situação…</div>
+<main id="cartoes"></main>
+
+<details>
+  <summary>Seu perfil e privacidade</summary>
+  <label><input type="checkbox" id="dalvrij"> Tenho NS Flex Dal Vrij</label>
+  <label>Modo:
+    <select id="modo"><option value="turista">turista</option><option value="recem">recém-chegado</option><option value="morador">morador</option></select>
+  </label>
+  <label><input type="checkbox" id="voz"> Falar os avisos (no fone, se estiver conectado)</label>
+  <label>Simular lugar (para testar):
+    <select id="simular"><option value="">usar o GPS</option></select>
+  </label>
+  <p>Seu lugar, sua hora e suas respostas <b>ficam só neste aparelho</b>. Nada é enviado.</p>
+  <p><button id="exportar">baixar minhas respostas (.json)</button> <span id="nresp"></span></p>
+</details>
+
+<script type="module">
+import { relevantes, avaliar, noPico, distancia } from './kernel.js';
+import { fatosDoTempo, detectorDeSaida } from './sensores.js';
+import { montar as montarChuva } from './chuva.js';
+
+const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+const ler = (k, padrao) => { try { return JSON.parse(localStorage.getItem(k)) ?? padrao; } catch { return padrao; } };
+const params = new URLSearchParams(location.search);
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+const base = await (await fetch('cartoes.json')).json();
+let perfil = ler('perfil', []);
+let avaliacoes = ler('avaliacoes', {});
+let modo = ler('modo', 'recem'), voz = ler('voz', false), eventos = [], fatos = {}, falado = '';
+document.getElementById('modo').value = modo;
+document.getElementById('voz').checked = voz;
+function falar(texto) {
+  if (!voz || !('speechSynthesis' in window) || texto === falado) return;
+  falado = texto; speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto); u.lang = 'pt-BR'; speechSynthesis.speak(u);
+}
+
+const sel = document.getElementById('simular');
+for (const [id, l] of Object.entries(base.lugares)) sel.add(new Option(l.nome, id));
+sel.value = ler('simular', '');
+document.getElementById('dalvrij').checked = perfil.includes('dalvrij');
+
+function agora() { return params.get('t') ? new Date(params.get('t')) : new Date(); }
+
+function lugar() {
+  if (params.get('lugar')) return Promise.resolve(base.lugares[params.get('lugar')]);
+  if (sel.value) return Promise.resolve(base.lugares[sel.value]);
+  return new Promise(ok => {
+    if (!navigator.geolocation) return ok(null);
+    navigator.geolocation.getCurrentPosition(
+      p => ok({ lat: p.coords.latitude, lon: p.coords.longitude }),
+      () => ok(null), { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+  });
+}
+
+async function desenhar() {
+  const l = await lugar();
+  if (params.get('chuva') != null) fatos = { chuva_min: params.get('chuva') === 'nao' ? null : Number(params.get('chuva')), temp_max: params.get('temp') ? Number(params.get('temp')) : undefined };
+  else if (l && !fatos.lido) fatos = { ...(await fatosDoTempo(l)), lido: true };
+  const s = { lugar: l, agora: agora(), perfil, fatos, eventos: params.get('evento') ? [params.get('evento')] : eventos };
+  const hora = s.agora.toTimeString().slice(0, 5);
+  document.getElementById('situacao').textContent =
+    `${hora} · ${noPico(s.agora) ? 'horário de pico' : 'fora do pico'} · ${s.lugar ? 'local conhecido' : 'sem localização'}` +
+    (fatos.chuva_min === null ? ' · sem chuva em 2 h' : fatos.chuva_min != null ? ` · chuva em ${fatos.chuva_min} min` : '');
+  const lista = relevantes(base, s, avaliacoes);
+  document.getElementById('cartoes').innerHTML = lista.map(({ k, titulo, motivos, w, nav }) => `
+    <article class="cartao" data-id="${esc(k.id)}">
+      <h2>${esc(titulo)}</h2>
+      <p class="porque">apareceu porque ${esc(motivos.join(' · '))}</p>
+      <p>${esc(k.o_que)}</p>
+      ${modo !== 'morador' ? `<p><i>${esc(k.por_que)}</i></p>` : ''}
+      ${k.faca ? `<ul class="faca">${k.faca.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : ''}
+      ${k.frase_nl && modo !== 'morador' ? `<div class="frase"><b lang="nl">${esc(k.frase_nl.nl)}</b><span>${esc(k.frase_nl.pt)}</span></div>` : ''}
+      ${k.id === 'chuva' ? '<div class="chuva-extra"></div>' : ''}
+      ${k.incerteza ? `<p class="incerteza">⚠ ${esc(k.incerteza)}</p>` : ''}
+      ${k.aviso_validade ? `<p class="validade">⏳ ${esc(k.aviso_validade)}</p>` : ''}
+      <p class="fonte">fonte: ${k.fontes.map(f => f.url ? `<a href="${esc(f.url)}" rel="noopener">${esc(f.nome)}</a>` : esc(f.nome)).join(', ')} · válido até ${esc(k.valido_ate)}</p>
+      <div class="botoes">
+        <button class="sim" data-r="1">ajudou</button>
+        <button class="nao" data-r="0">não ajudou</button>
+        <button class="comentar">comentar</button>
+        <span class="maturidade">${nav < 3 ? 'novo, pouco testado' : `utilidade ${Math.round(w * 100)}% · n=${Math.round(nav)}`}</span>
+      </div>
+      <div class="resposta">
+        <textarea placeholder="Como este cartão poderia ter ajudado mais?"></textarea>
+        <button class="salvar">guardar</button>
+      </div>
+    </article>`).join('') || '<p>Nada para este lugar e esta hora.</p>';
+  if (lista[0]) falar(lista[0].titulo);
+  const extra = document.querySelector('.chuva-extra');
+  if (extra && s.lugar) montarChuva(extra, s.lugar).catch(e => { extra.innerHTML = `<p class="porque">gráfico indisponível: ${esc(e.message)}</p>`; });
+  eventos = [];
+}
+
+let respostas = ler('respostas', []);
+const contar = () => document.getElementById('nresp').textContent = respostas.length ? `${respostas.length} guardada(s)` : '';
+contar();
+document.getElementById('cartoes').addEventListener('click', e => {
+  const cartao = e.target.closest('.cartao'); if (!cartao) return;
+  const id = cartao.dataset.id, caixa = cartao.querySelector('.resposta');
+  const b = e.target.closest('button[data-r]');
+  if (b) {
+    cartao.dataset.ajudou = b.dataset.r;
+    avaliacoes = avaliar(avaliacoes, id, b.dataset.r === '1', new Date());
+    guardar('avaliacoes', avaliacoes);
+    cartao.querySelector('.maturidade').textContent = 'guardado só aqui';
+    caixa.classList.add('aberta');
+    caixa.querySelector('textarea').placeholder = b.dataset.r === '1' ? 'O que faltou para ajudar mais? (opcional)' : 'O que teria ajudado? (opcional)';
+  }
+  if (e.target.closest('.comentar')) caixa.classList.toggle('aberta');
+  if (e.target.closest('.salvar')) {
+    const texto = caixa.querySelector('textarea').value.trim(); if (!texto) return;
+    respostas.push({ id, texto, ajudou: cartao.dataset.ajudou ?? null, modo, t: new Date().toISOString(),
+                     porque: cartao.querySelector('.porque').textContent, versao: base.versao });
+    guardar('respostas', respostas); contar();
+    caixa.innerHTML = '<p class="porque">obrigado — guardado só neste aparelho</p>';
+  }
+});
+document.getElementById('exportar').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ exportado: new Date().toISOString(), avaliacoes, respostas }, null, 2)], { type: 'application/json' });
+  const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `agora-aqui-respostas-${new Date().toISOString().slice(0, 10)}.json` });
+  a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById('dalvrij').addEventListener('change', e => {
+  perfil = e.target.checked ? ['dalvrij'] : []; guardar('perfil', perfil); desenhar();
+});
+sel.addEventListener('change', () => { guardar('simular', sel.value); fatos = {}; desenhar(); });
+document.getElementById('modo').addEventListener('change', e => { modo = e.target.value; guardar('modo', modo); desenhar(); });
+document.getElementById('voz').addEventListener('change', e => { voz = e.target.checked; guardar('voz', voz); falado = ''; if (voz) falar('Avisos por voz ligados.'); });
+// enquanto a página está aberta: segue o GPS e dispara o evento "saiu da estação"
+const saida = detectorDeSaida(base.lugares, distancia);
+if (navigator.geolocation && !params.has('lugar')) navigator.geolocation.watchPosition(p => {
+  const ev = saida({ lat: p.coords.latitude, lon: p.coords.longitude });
+  if (ev) { eventos = [ev.evento]; desenhar(); }
+}, () => {}, { enableHighAccuracy: true, maximumAge: 15000 });
+setInterval(() => { fatos = {}; desenhar(); }, 5 * 60 * 1000);
+document.getElementById('atualizar').addEventListener('click', desenhar);
+
+desenhar();
+if ('serviceWorker' in navigator && !params.has('t')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+{
+  "versao": "2026-10-16",
+  "lugares": {
+    "diemen-zuid": {
+      "nome": "Diemen Zuid",
+      "lat": 52.33015,
+      "lon": 4.95611
+    },
+    "duivendrecht": {
+      "nome": "Duivendrecht",
+      "lat": 52.32358,
+      "lon": 4.93647
+    },
+    "ams-zuid": {
+      "nome": "Amsterdam Zuid",
+      "lat": 52.3388,
+      "lon": 4.87319
+    },
+    "ams-rai": {
+      "nome": "Amsterdam RAI",
+      "lat": 52.33703,
+      "lon": 4.89022
+    },
+    "ams-centraal": {
+      "nome": "Amsterdam Centraal",
+      "lat": 52.3789,
+      "lon": 4.90058
+    }
+  },
+  "cartoes": [
+    {
+      "id": "saiu-checkout",
+      "titulo": "Você saiu da estação. Fez o check-out?",
+      "condicao": {
+        "evento": "saiu_estacao"
+      },
+      "o_que": "Se você veio de trem, encoste o cartão no poste ou na catraca antes de ir embora.",
+      "por_que": "Sem check-out a viagem fica incompleta e pode ser cobrada pelo valor máximo.",
+      "faca": [
+        "Volte ao poste mais próximo da saída",
+        "Esqueceu mesmo? Corrija no app OVpay (precisa de login)"
+      ],
+      "fontes": [
+        {
+          "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+          "url": "",
+          "autoridade": "medido"
+        }
+      ],
+      "valido_ate": "2027-10-01",
+      "voz": true
+    },
+    {
+      "id": "chuva",
+      "titulo": "Chuva aqui {chuva_quando}",
+      "condicao": {
+        "chuva_em_ate_min": 60
+      },
+      "o_que": "O radar de chuva prevê chuva no seu ponto dentro de uma hora.",
+      "por_que": "Na Holanda a chuva chega em faixas e dura pouco: muitas vezes vale esperar 15 minutos.",
+      "faca": [
+        "Abra o Buienradar para ver quanto dura",
+        "Se estiver a pé, saia antes ou espere passar"
+      ],
+      "frase_nl": {
+        "nl": "Gaat het regenen?",
+        "pt": "Vai chover?"
+      },
+      "fontes": [
+        {
+          "nome": "Buienradar",
+          "url": "https://www.buienradar.nl",
+          "autoridade": "oficial"
+        }
+      ],
+      "valido_ate": "2027-10-01",
+      "voz": true
+    },
+    {
+      "id": "calor",
+      "titulo": "Hoje chega a {temp_max} °C",
+      "condicao": {
+        "temp_max_min": 25
+      },
+      "o_que": "Dia quente: leve água. Há torneiras grátis pela cidade.",
+      "por_que": "Os trens e as casas holandesas são feitos para o frio; o calor pega desprevenido.",
+      "faca": [
+        "No Google Maps, busque \"Water Tap\""
+      ],
+      "fontes": [
+        {
+          "nome": "Open-Meteo",
+          "url": "https://open-meteo.com",
+          "autoridade": "comunidade"
+        }
+      ],
+      "valido_ate": "2027-10-01"
+    },
+    {
+      "id": "zuid-baldeacao",
+      "titulo": "Em Amsterdam Zuid, não baldeie pela catraca",
+      "condicao": {
+        "perto_de": [
+          "ams-zuid"
+        ],
+        "raio_m": 500
+      },
+      "o_que": "Para trocar entre as plataformas 1/2 e 3/4, use a escada e o saguão. Não passe pela catraca.",
+      "por_que": "O sistema cobra pela distância que você realmente fez. Passar pela catraca no meio da baldeação pode fazer a viagem custar mais.",
+      "faca": [
+        "Siga a escada até o saguão",
+        "Não encoste o cartão na catraca",
+        "Desça para a outra plataforma"
+      ],
+      "frase_nl": {
+        "nl": "Moet ik hier uitchecken om over te stappen?",
+        "pt": "Preciso fazer check-out aqui para baldear?"
+      },
+      "fontes": [
+        {
+          "nome": "NS — alternative routes",
+          "url": "https://www.ns.nl/en/travel/check-in-check-out/alternative-routes",
+          "autoridade": "oficial"
+        }
+      ],
+      "valido_ate": "2026-11-01",
+      "aviso_validade": "A entrada de Zuid muda em 01/11/2026 (Brittenpassage). Depois disso, esta regra precisa ser conferida de novo."
+    },
+    {
+      "id": "dal-vrij-pico",
+      "titulo": "Dal Vrij: o pico começa em {min_ate_pico} min",
+      "condicao": {
+        "perfil": "dalvrij",
+        "dias": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "janelas": [
+          [
+            "06:00",
+            "06:30"
+          ],
+          [
+            "15:30",
+            "16:00"
+          ]
+        ]
+      },
+      "o_que": "O seu passe só é grátis se você fizer o check-in fora do pico. Pico em dia útil: 06:30–09:00 e 16:00–18:30.",
+      "por_que": "O que conta é a hora do check-in. Entrar às 15:59 é grátis; às 16:01, você paga a tarifa do NS Flex na fatura.",
+      "faca": [
+        "Faça o check-in antes do horário",
+        "Ou espere o pico acabar (09:00 ou 18:30)"
+      ],
+      "frase_nl": {
+        "nl": "Is dit nog daluren?",
+        "pt": "Ainda é fora do pico?"
+      },
+      "fontes": [
+        {
+          "nome": "Q&A Dal Vrij (não oficial)",
+          "url": "https://webwoordenboek.nl/kenniscentrum/hoe-werkt-dal-vrij-abonnement",
+          "autoridade": "blog"
+        }
+      ],
+      "incerteza": "As fontes discordam sobre o fim do pico da tarde (18:25 ou 18:30) e citam uma margem de 5 min. Página oficial da NS ainda não conferida.",
+      "valido_ate": "2027-01-01"
+    },
+    {
+      "id": "dal-vrij-livre",
+      "titulo": "Agora é fora do pico: o trem é grátis para você",
+      "condicao": {
+        "perfil": "dalvrij",
+        "fora_do_pico": true
+      },
+      "o_que": "Com Dal Vrij, viagem com check-in fora do pico não custa nada. Na lista do app NS ela aparece primeiro como \"Processing\" e depois como € 0,00.",
+      "por_que": "\"Processing\" não quer dizer cobrança. É só a viagem ainda não fechada.",
+      "faca": [
+        "Check-in e check-out sempre com o mesmo cartão"
+      ],
+      "fontes": [
+        {
+          "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+          "url": "",
+          "autoridade": "medido"
+        }
+      ],
+      "valido_ate": "2027-01-01"
+    },
+    {
+      "id": "check-out",
+      "titulo": "Sempre faça o check-out, com o mesmo cartão",
+      "condicao": {
+        "perto_de": [
+          "diemen-zuid",
+          "duivendrecht",
+          "ams-zuid",
+          "ams-rai",
+          "ams-centraal"
+        ],
+        "raio_m": 250
+      },
+      "o_que": "Encoste o mesmo cartão na entrada e na saída. Sem check-out, a viagem fica incompleta.",
+      "por_que": "Quando falta o check-out, o app NS mostra \"Check-in unknown\" ou \"No checkout yet\". Viagem incompleta pode ser cobrada pelo valor máximo.",
+      "faca": [
+        "Saiu do trem: encoste o cartão no poste ou na catraca",
+        "Esqueceu? Corrija no app OVpay (precisa de login)"
+      ],
+      "fontes": [
+        {
+          "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+          "url": "",
+          "autoridade": "medido"
+        }
+      ],
+      "valido_ate": "2027-01-01"
+    },
+    {
+      "id": "agua",
+      "titulo": "Água de graça: há mais de 500 torneiras em Amsterdã",
+      "condicao": {},
+      "o_que": "A água da torneira é potável. Há mais de 500 torneiras públicas e grátis, abertas 24h.",
+      "por_que": "Ninguém conta isso para quem chega, e a água em garrafa é cara.",
+      "faca": [
+        "No Google Maps, busque \"Water Tap\"",
+        "Ou abra o mapa da Waternet"
+      ],
+      "frase_nl": {
+        "nl": "Mag ik mijn fles hier vullen?",
+        "pt": "Posso encher minha garrafa aqui?"
+      },
+      "fontes": [
+        {
+          "nome": "Waternet",
+          "url": "https://www.waternet.nl/en/service-and-contact/tap-water/can-you-drink-tap-water-in-amsterdam/",
+          "autoridade": "oficial"
+        }
+      ],
+      "valido_ate": "2027-10-01"
+    },
+    {
+      "id": "banheiro",
+      "titulo": "Banheiro: na estação é pago, e o HogeNood mostra os outros",
+      "condicao": {
+        "perto_de": [
+          "diemen-zuid",
+          "duivendrecht",
+          "ams-zuid",
+          "ams-rai",
+          "ams-centraal"
+        ],
+        "raio_m": 400
+      },
+      "o_que": "Nas estações grandes o banheiro custa cerca de € 1,10 e é de uma empresa terceirizada. O app HogeNood (você já tem) mostra quais são pagos ou grátis.",
+      "por_que": "Não há lei sobre o preço, e cada lugar cobra diferente.",
+      "faca": [
+        "Abra o HogeNood",
+        "Na estação, procure a placa \"Toiletten\""
+      ],
+      "frase_nl": {
+        "nl": "Waar is het toilet?",
+        "pt": "Onde fica o banheiro?"
+      },
+      "fontes": [
+        {
+          "nome": "AVROTROS Radar",
+          "url": "https://radar.avrotros.nl/artikel/hoge-nood-wat-is-een-redelijke-prijs-voor-een-openbaar-toilet-62859",
+          "autoridade": "imprensa"
+        }
+      ],
+      "valido_ate": "2027-01-01"
+    },
+    {
+      "id": "plataforma-ab",
+      "titulo": "Plataforma \"5a\" e \"5b\": são metades do mesmo trilho",
+      "condicao": {
+        "perto_de": [
+          "diemen-zuid",
+          "duivendrecht",
+          "ams-zuid",
+          "ams-rai",
+          "ams-centraal"
+        ],
+        "raio_m": 250
+      },
+      "o_que": "Uma plataforma longa pode ter dois trens, um em cada metade: a e b. Placas ao longo da plataforma mostram onde começa cada metade.",
+      "por_que": "Se o seu trem é do 5b e você espera no 5a, ele pode parar a 100 m de você.",
+      "faca": [
+        "Confira a letra no app ou no painel",
+        "Procure a placa com a letra ao longo da plataforma"
+      ],
+      "frase_nl": {
+        "nl": "Is dit spoor 5b?",
+        "pt": "Este é o trilho 5b?"
+      },
+      "fontes": [
+        {
+          "nome": "OpenStreetMap — platform sections",
+          "url": "https://wiki.openstreetmap.org/Key:railway:platform:section",
+          "autoridade": "comunidade"
+        }
+      ],
+      "incerteza": "Explicação geral; não achei página da NS que explique o a/b para quem chega.",
+      "valido_ate": "2027-10-01"
+    },
+    {
+      "id": "lingua-aviso",
+      "titulo": "Alguém falou com você em holandês e você não entendeu",
+      "condicao": {},
+      "o_que": "Pergunte em holandês se está fazendo algo errado. Quase todo mundo responde em inglês.",
+      "por_que": "O aviso de \"você está no lugar errado\" vem de pessoas, na hora, em holandês. O alerta oficial de emergência (NL-Alert) chega em inglês.",
+      "faca": [
+        "Use as frases abaixo",
+        "Google Tradutor: modo conversa, ou tradução ao vivo pelo fone (holandês ainda não confirmado)"
+      ],
+      "frase_nl": {
+        "nl": "Sorry, ik spreek geen Nederlands. Doe ik iets verkeerd?",
+        "pt": "Desculpe, não falo holandês. Estou fazendo algo errado?"
+      },
+      "fontes": [
+        {
+          "nome": "NL-Alert (Zeeland)",
+          "url": "https://www.zeeland.com/en/visit/plan-your-trip/safety-messaging",
+          "autoridade": "oficial"
+        }
+      ],
+      "valido_ate": "2027-10-01"
+    },
+    {
+      "id": "ciclovia",
+      "titulo": "Asfalto vermelho é ciclovia: não ande nela",
+      "condicao": {},
+      "o_que": "A faixa vermelha é das bicicletas. Pedestre nela é o motivo mais comum de alguém gritar com você.",
+      "por_que": "As bicicletas vêm rápido e esperam que a faixa esteja livre. O sino é o aviso.",
+      "faca": [
+        "Ouviu um sino: saia da faixa vermelha",
+        "Atravesse olhando para os dois lados da ciclovia"
+      ],
+      "frase_nl": {
+        "nl": "Sorry!",
+        "pt": "Desculpa!"
+      },
+      "fontes": [
+        {
+          "nome": "Leiden International Centre",
+          "url": "https://www.leideninternationalcentre.nl/get-advice/blogs/surviving-and-enjoying-dutch-cycling-culture",
+          "autoridade": "blog"
+        }
+      ],
+      "valido_ate": "2027-10-01"
+    },
+    {
+      "id": "stilte",
+      "titulo": "Vagão com \"Stilte\": é silêncio total",
+      "condicao": {
+        "perto_de": [
+          "diemen-zuid",
+          "duivendrecht",
+          "ams-zuid",
+          "ams-rai",
+          "ams-centraal"
+        ],
+        "raio_m": 250
+      },
+      "o_que": "Vagões marcados \"Stilte\" são de silêncio: sem ligação, sem conversa, sem som no celular.",
+      "por_que": "É regra não escrita para quem chega e escrita para quem mora lá: as pessoas vão pedir silêncio.",
+      "faca": [
+        "Para falar ao telefone, escolha outro vagão"
+      ],
+      "frase_nl": {
+        "nl": "Is dit een stiltecoupé?",
+        "pt": "Este é o vagão do silêncio?"
+      },
+      "fontes": [
+        {
+          "nome": "Univers — guia dos trens",
+          "url": "https://universonline.nl/?p=17170",
+          "autoridade": "blog"
+        }
+      ],
+      "valido_ate": "2027-10-01"
+    }
+  ],
+  "modos": {
+    "turista": "tudo, com frases",
+    "recem": "tudo",
+    "morador": "só o título e o que fazer"
+  }
+}
