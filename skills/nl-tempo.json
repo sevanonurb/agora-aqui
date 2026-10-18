@@ -1,0 +1,84 @@
+{
+ "id": "nl-tempo",
+ "pais": "nl",
+ "dominio": "tempo",
+ "nome": "Clima na rua (chuva e calor)",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "Buienradar",
+   "url": "https://www.buienradar.nl",
+   "tipo": "feed"
+  },
+  {
+   "nome": "Open-Meteo",
+   "url": "https://open-meteo.com",
+   "tipo": "api"
+  }
+ ],
+ "lugares": {},
+ "cartoes": [
+  {
+   "id": "chuva",
+   "titulo": "Chuva aqui {chuva_quando}",
+   "condicao": {
+    "chuva_em_ate_min": 60
+   },
+   "o_que": "O radar de chuva prevê chuva no seu ponto dentro de uma hora.",
+   "por_que": "Na Holanda a chuva chega em faixas e dura pouco: muitas vezes vale esperar 15 minutos.",
+   "faca": [
+    "Abra o Buienradar para ver quanto dura",
+    "Se estiver a pé, saia antes ou espere passar"
+   ],
+   "frase_nl": {
+    "nl": "Gaat het regenen?",
+    "pt": "Vai chover?"
+   },
+   "fontes": [
+    {
+     "nome": "Buienradar",
+     "url": "https://www.buienradar.nl",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-10-01",
+   "voz": true,
+   "acoes": [
+    {
+     "rotulo": "Abrir Buienradar",
+     "url": "https://www.buienradar.nl"
+    }
+   ]
+  },
+  {
+   "id": "calor",
+   "titulo": "Hoje chega a {temp_max} °C",
+   "condicao": {
+    "temp_max_min": 25
+   },
+   "o_que": "Dia quente: leve água. Há torneiras grátis pela cidade.",
+   "por_que": "Os trens e as casas holandesas são feitos para o frio; o calor pega desprevenido.",
+   "faca": [
+    "No Google Maps, busque \"Water Tap\""
+   ],
+   "fontes": [
+    {
+     "nome": "Open-Meteo",
+     "url": "https://open-meteo.com",
+     "autoridade": "comunidade"
+    }
+   ],
+   "valido_ate": "2027-10-01",
+   "acoes": [
+    {
+     "rotulo": "Previsão (Buienradar)",
+     "url": "https://www.buienradar.nl"
+    }
+   ]
+  }
+ ]
+}

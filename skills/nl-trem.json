@@ -1,0 +1,366 @@
+{
+ "id": "nl-trem",
+ "pais": "nl",
+ "dominio": "trem",
+ "nome": "Trem, metrô e OV-chipkaart",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "NS",
+   "url": "https://www.ns.nl",
+   "tipo": "app"
+  },
+  {
+   "nome": "OVpay",
+   "url": "https://www.ov-chipkaart.nl/ovpay",
+   "tipo": "app"
+  },
+  {
+   "nome": "GVB",
+   "url": "https://www.gvb.nl/en",
+   "tipo": "app"
+  }
+ ],
+ "lugares": {
+  "duivendrecht": {
+   "nome": "Duivendrecht",
+   "lat": 52.32358,
+   "lon": 4.93647
+  },
+  "ams-centraal": {
+   "nome": "Amsterdam Centraal",
+   "lat": 52.3789,
+   "lon": 4.90058
+  },
+  "diemen-zuid": {
+   "nome": "Diemen Zuid",
+   "lat": 52.33015,
+   "lon": 4.95611
+  },
+  "ams-rai": {
+   "nome": "Amsterdam RAI",
+   "lat": 52.33703,
+   "lon": 4.89022
+  },
+  "ams-zuid": {
+   "nome": "Amsterdam Zuid",
+   "lat": 52.3388,
+   "lon": 4.87319
+  },
+  "schiphol": {
+   "nome": "Schiphol",
+   "lat": 52.3105,
+   "lon": 4.7683
+  },
+  "rotterdam-centraal": {
+   "nome": "Rotterdam Centraal",
+   "lat": 51.9249,
+   "lon": 4.47
+  },
+  "holwerd-veerdam": {
+   "nome": "Holwerd (balsa)",
+   "lat": 53.394,
+   "lon": 5.887
+  },
+  "harlingen-haven": {
+   "nome": "Harlingen Haven",
+   "lat": 53.1736,
+   "lon": 5.4219
+  }
+ },
+ "cartoes": [
+  {
+   "id": "saiu-checkout",
+   "titulo": "Você saiu da estação. Fez o check-out?",
+   "condicao": {
+    "evento": "saiu_estacao"
+   },
+   "o_que": "Se você veio de trem, encoste o cartão no poste ou na catraca antes de ir embora.",
+   "por_que": "Sem check-out a viagem fica incompleta e pode ser cobrada pelo valor máximo.",
+   "faca": [
+    "Volte ao poste mais próximo da saída",
+    "Esqueceu mesmo? Corrija no app OVpay (precisa de login)"
+   ],
+   "fontes": [
+    {
+     "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-10-01",
+   "voz": true,
+   "acoes": [
+    {
+     "rotulo": "Corrigir no OVpay",
+     "url": "https://www.ov-chipkaart.nl/ovpay"
+    }
+   ]
+  },
+  {
+   "id": "check-out",
+   "titulo": "Sempre faça o check-out, com o mesmo cartão",
+   "condicao": {
+    "perto_de": [
+     "diemen-zuid",
+     "duivendrecht",
+     "ams-zuid",
+     "ams-rai",
+     "ams-centraal"
+    ],
+    "raio_m": 250
+   },
+   "o_que": "Encoste o mesmo cartão na entrada e na saída. Sem check-out, a viagem fica incompleta.",
+   "por_que": "Quando falta o check-out, o app NS mostra \"Check-in unknown\" ou \"No checkout yet\". Viagem incompleta pode ser cobrada pelo valor máximo.",
+   "faca": [
+    "Saiu do trem: encoste o cartão no poste ou na catraca",
+    "Esqueceu? Corrija no app OVpay (precisa de login)"
+   ],
+   "fontes": [
+    {
+     "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-01-01",
+   "acoes": [
+    {
+     "rotulo": "OVpay",
+     "url": "https://www.ov-chipkaart.nl/ovpay"
+    }
+   ]
+  },
+  {
+   "id": "dal-vrij-pico",
+   "titulo": "Dal Vrij: o pico começa em {min_ate_pico} min",
+   "condicao": {
+    "perfil": "dalvrij",
+    "dias": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "janelas": [
+     [
+      "06:00",
+      "06:30"
+     ],
+     [
+      "15:30",
+      "16:00"
+     ]
+    ]
+   },
+   "o_que": "O seu passe só é grátis se você fizer o check-in fora do pico. Pico em dia útil: 06:30–09:00 e 16:00–18:30.",
+   "por_que": "O que conta é a hora do check-in. Entrar às 15:59 é grátis; às 16:01, você paga a tarifa do NS Flex na fatura.",
+   "faca": [
+    "Faça o check-in antes do horário",
+    "Ou espere o pico acabar (09:00 ou 18:30)"
+   ],
+   "frase_nl": {
+    "nl": "Is dit nog daluren?",
+    "pt": "Ainda é fora do pico?"
+   },
+   "fontes": [
+    {
+     "nome": "Q&A Dal Vrij (não oficial)",
+     "url": "https://webwoordenboek.nl/kenniscentrum/hoe-werkt-dal-vrij-abonnement",
+     "autoridade": "blog"
+    }
+   ],
+   "incerteza": "As fontes discordam sobre o fim do pico da tarde (18:25 ou 18:30) e citam uma margem de 5 min. Página oficial da NS ainda não conferida.",
+   "valido_ate": "2027-01-01",
+   "acoes": [
+    {
+     "rotulo": "Ver horário (NS)",
+     "url": "https://www.ns.nl/en/journeyplanner"
+    }
+   ]
+  },
+  {
+   "id": "dal-vrij-livre",
+   "titulo": "Agora é fora do pico: o trem é grátis para você",
+   "condicao": {
+    "perfil": "dalvrij",
+    "fora_do_pico": true
+   },
+   "o_que": "Com Dal Vrij, viagem com check-in fora do pico não custa nada. Na lista do app NS ela aparece primeiro como \"Processing\" e depois como € 0,00.",
+   "por_que": "\"Processing\" não quer dizer cobrança. É só a viagem ainda não fechada.",
+   "faca": [
+    "Check-in e check-out sempre com o mesmo cartão"
+   ],
+   "fontes": [
+    {
+     "nome": "Observado no app NS (Mijn NS › Transactions), out/2026",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-01-01",
+   "acoes": [
+    {
+     "rotulo": "Planejar viagem (NS)",
+     "url": "https://www.ns.nl/en/journeyplanner"
+    }
+   ]
+  },
+  {
+   "id": "zuid-baldeacao",
+   "titulo": "Em Amsterdam Zuid, não baldeie pela catraca",
+   "condicao": {
+    "perto_de": [
+     "ams-zuid"
+    ],
+    "raio_m": 500
+   },
+   "o_que": "Para trocar entre as plataformas 1/2 e 3/4, use a escada e o saguão. Não passe pela catraca.",
+   "por_que": "O sistema cobra pela distância que você realmente fez. Passar pela catraca no meio da baldeação pode fazer a viagem custar mais.",
+   "faca": [
+    "Siga a escada até o saguão",
+    "Não encoste o cartão na catraca",
+    "Desça para a outra plataforma"
+   ],
+   "frase_nl": {
+    "nl": "Moet ik hier uitchecken om over te stappen?",
+    "pt": "Preciso fazer check-out aqui para baldear?"
+   },
+   "fontes": [
+    {
+     "nome": "NS — alternative routes",
+     "url": "https://www.ns.nl/en/travel/check-in-check-out/alternative-routes",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2026-11-01",
+   "aviso_validade": "A entrada de Zuid muda em 01/11/2026 (Brittenpassage). Depois disso, esta regra precisa ser conferida de novo.",
+   "acoes": [
+    {
+     "rotulo": "Metrô GVB",
+     "url": "https://www.gvb.nl/en"
+    }
+   ]
+  },
+  {
+   "id": "plataforma-ab",
+   "titulo": "Plataforma \"5a\" e \"5b\": são metades do mesmo trilho",
+   "condicao": {
+    "perto_de": [
+     "diemen-zuid",
+     "duivendrecht",
+     "ams-zuid",
+     "ams-rai",
+     "ams-centraal"
+    ],
+    "raio_m": 250
+   },
+   "o_que": "Uma plataforma longa pode ter dois trens, um em cada metade: a e b. Placas ao longo da plataforma mostram onde começa cada metade.",
+   "por_que": "Se o seu trem é do 5b e você espera no 5a, ele pode parar a 100 m de você.",
+   "faca": [
+    "Confira a letra no app ou no painel",
+    "Procure a placa com a letra ao longo da plataforma"
+   ],
+   "frase_nl": {
+    "nl": "Is dit spoor 5b?",
+    "pt": "Este é o trilho 5b?"
+   },
+   "fontes": [
+    {
+     "nome": "OpenStreetMap — platform sections",
+     "url": "https://wiki.openstreetmap.org/Key:railway:platform:section",
+     "autoridade": "comunidade"
+    }
+   ],
+   "incerteza": "Explicação geral; não achei página da NS que explique o a/b para quem chega.",
+   "valido_ate": "2027-10-01",
+   "acoes": [
+    {
+     "rotulo": "Ver plataforma (NS)",
+     "url": "https://www.ns.nl/en/journeyplanner"
+    }
+   ]
+  },
+  {
+   "id": "intercity-direct-toeslag",
+   "titulo": "Intercity Direct cobra a mais, mesmo com Dal Vrij",
+   "condicao": {
+    "perfil": "dalvrij",
+    "perto_de": [
+     "schiphol",
+     "rotterdam-centraal"
+    ],
+    "raio_m": 900
+   },
+   "o_que": "No trecho Schiphol–Rotterdam, o Intercity Direct cobra um suplemento (toeslag) além do passe. O Dal Vrij não cobre.",
+   "por_que": "A tarifa gratuita fora do pico vale no trem comum, não no Intercity Direct desse trecho.",
+   "faca": [
+    "Encoste o cartão na coluna de toeslag (toeslagzuil) antes de embarcar",
+    "Ou pegue um Intercity comum e evite o suplemento"
+   ],
+   "frase_nl": {
+    "nl": "Moet ik toeslag betalen voor de Intercity direct?",
+    "pt": "Preciso pagar suplemento para o Intercity Direct?"
+   },
+   "fontes": [
+    {
+     "nome": "NS — Intercity direct supplement",
+     "url": "https://www.ns.nl/en/travel-information/intercity-direct/supplement.html",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-07-01",
+   "acoes": [
+    {
+     "rotulo": "Ver toeslag (NS)",
+     "url": "https://www.ns.nl/en/travel-information/intercity-direct/supplement.html"
+    }
+   ]
+  },
+  {
+   "id": "ilhas-balsa",
+   "titulo": "O passe de trem não cobre balsa nem ônibus",
+   "condicao": {
+    "perto_de": [
+     "holwerd-veerdam",
+     "harlingen-haven"
+    ],
+    "raio_m": 1500
+   },
+   "o_que": "Para as ilhas do Mar de Wadden você pega ônibus + balsa. Nenhum é trem NS, então o Dal Vrij não cobre — paga à parte.",
+   "por_que": "O passe é só de trem NS. Ônibus (Qbuzz/Arriva) e balsa (Wagenborg) são operadores próprios.",
+   "faca": [
+    "Planeje ônibus+balsa no app 9292, não no NS",
+    "Confira o ÚLTIMO ônibus de volta — some cedo e você fica preso no continente"
+   ],
+   "frase_nl": {
+    "nl": "Geldt mijn NS-abonnement op de boot?",
+    "pt": "Meu passe da NS vale na balsa?"
+   },
+   "fontes": [
+    {
+     "nome": "Wagenborg",
+     "url": "https://www.wpd.nl/en/ameland/our-crossings",
+     "autoridade": "oficial"
+    },
+    {
+     "nome": "medido no 9292, out/2026",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-01-01",
+   "acoes": [
+    {
+     "rotulo": "Planejar (9292)",
+     "url": "https://9292.nl/en"
+    }
+   ]
+  }
+ ]
+}

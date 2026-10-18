@@ -1,0 +1,58 @@
+{
+ "id": "nl-chegar",
+ "pais": "nl",
+ "dominio": "chegar",
+ "nome": "Montar casa",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "Marktplaats",
+   "url": "https://www.marktplaats.nl",
+   "tipo": "app"
+  }
+ ],
+ "lugares": {},
+ "cartoes": [
+  {
+   "id": "marktplaats-usado",
+   "titulo": "Para montar casa barato: usado no Marktplaats",
+   "condicao": {
+    "perfil": "recem"
+   },
+   "o_que": "Marktplaats é o maior mercado de usados da Holanda — móvel, bike e eletrônico por uma fração do novo.",
+   "por_que": "Comprar tudo novo ao chegar é caro; o usado local é abundante e barato.",
+   "faca": [
+    "Teste na hora (bateria, lente, botões)",
+    "Encontro em lugar público (estação, café)",
+    "Pague só na entrega — em dinheiro não há proteção; nada de Tikkie antes de ver"
+   ],
+   "frase_nl": {
+    "nl": "Is dit nog beschikbaar?",
+    "pt": "Isto ainda está disponível?"
+   },
+   "fontes": [
+    {
+     "nome": "Marktplaats",
+     "url": "https://www.marktplaats.nl",
+     "autoridade": "oficial"
+    },
+    {
+     "nome": "preços medidos out/2026",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-12-31",
+   "acoes": [
+    {
+     "rotulo": "Abrir Marktplaats",
+     "url": "https://www.marktplaats.nl"
+    }
+   ]
+  }
+ ]
+}

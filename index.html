@@ -26,6 +26,9 @@
   .incerteza, .validade { font-size:13px; color:var(--aviso); margin:6px 0; }
   .fonte { font-size:13px; color:var(--suave); }
   .fonte a { color:var(--acento); }
+  .acoes { display:flex; flex-wrap:wrap; gap:8px; margin:10px 0 2px; }
+  .acao { font-size:14px; padding:8px 12px; border-radius:10px; background:var(--acento); color:#fff; text-decoration:none; }
+  @media (prefers-color-scheme: dark){ .acao{ color:#111; } }
   .botoes { display:flex; gap:8px; margin-top:10px; }
   button { font:inherit; font-size:15px; padding:8px 12px; border-radius:10px; border:1px solid var(--borda); background:transparent; color:var(--texto); }
   button.sim { border-color:var(--ok); color:var(--ok); }
@@ -55,6 +58,9 @@
   <label>Modo:
     <select id="modo"><option value="turista">turista</option><option value="recem">recém-chegado</option><option value="morador">morador</option></select>
   </label>
+  <label>Vou morar em:
+    <select id="destino"><option value="">— (só Holanda)</option><option value="espanha">Espanha</option></select>
+  </label>
   <label><input type="checkbox" id="voz"> Falar os avisos (no fone, se estiver conectado)</label>
   <label>Simular lugar (para testar):
     <select id="simular"><option value="">usar o GPS</option></select>
@@ -67,14 +73,18 @@
 import { relevantes, avaliar, noPico, distancia } from './kernel.js';
 import { fatosDoTempo, detectorDeSaida } from './sensores.js';
 import { montar as montarChuva } from './chuva.js';
+import { carregarSkills, montarPerfil } from './skills.js';
 
 const guardar = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 const ler = (k, padrao) => { try { return JSON.parse(localStorage.getItem(k)) ?? padrao; } catch { return padrao; } };
 const params = new URLSearchParams(location.search);
 const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const htmlAcoes = k => (k.acoes && k.acoes.length)
+  ? '<div class="acoes">' + k.acoes.map(a => '<a class="acao" href="' + esc(a.url) + '" target="_blank" rel="noopener">' + esc(a.rotulo) + ' ↗</a>').join('') + '</div>'
+  : '';
 
-const base = await (await fetch('cartoes.json')).json();
-let perfil = ler('perfil', []);
+const base = await carregarSkills(p => fetch(p).then(r => r.json()));
+let destino = ler('destino', '');
 let avaliacoes = ler('avaliacoes', {});
 let modo = ler('modo', 'recem'), voz = ler('voz', false), eventos = [], fatos = {}, falado = '';
 document.getElementById('modo').value = modo;
@@ -88,7 +98,8 @@ function falar(texto) {
 const sel = document.getElementById('simular');
 for (const [id, l] of Object.entries(base.lugares)) sel.add(new Option(l.nome, id));
 sel.value = ler('simular', '');
-document.getElementById('dalvrij').checked = perfil.includes('dalvrij');
+document.getElementById('dalvrij').checked = ler('dalvrij', false);
+document.getElementById('destino').value = destino;
 
 function agora() { return params.get('t') ? new Date(params.get('t')) : new Date(); }
 
@@ -107,6 +118,7 @@ async function desenhar() {
   const l = await lugar();
   if (params.get('chuva') != null) fatos = { chuva_min: params.get('chuva') === 'nao' ? null : Number(params.get('chuva')), temp_max: params.get('temp') ? Number(params.get('temp')) : undefined };
   else if (l && !fatos.lido) fatos = { ...(await fatosDoTempo(l)), lido: true };
+  const perfil = montarPerfil({ dalvrij: document.getElementById('dalvrij').checked, modo, destino });
   const s = { lugar: l, agora: agora(), perfil, fatos, eventos: params.get('evento') ? [params.get('evento')] : eventos };
   const hora = s.agora.toTimeString().slice(0, 5);
   document.getElementById('situacao').textContent =
@@ -125,6 +137,7 @@ async function desenhar() {
       ${k.incerteza ? `<p class="incerteza">⚠ ${esc(k.incerteza)}</p>` : ''}
       ${k.aviso_validade ? `<p class="validade">⏳ ${esc(k.aviso_validade)}</p>` : ''}
       <p class="fonte">fonte: ${k.fontes.map(f => f.url ? `<a href="${esc(f.url)}" rel="noopener">${esc(f.nome)}</a>` : esc(f.nome)).join(', ')} · válido até ${esc(k.valido_ate)}</p>
+      ${htmlAcoes(k)}
       <div class="botoes">
         <button class="sim" data-r="1">ajudou</button>
         <button class="nao" data-r="0">não ajudou</button>
@@ -171,9 +184,8 @@ document.getElementById('exportar').addEventListener('click', () => {
   const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: `agora-aqui-respostas-${new Date().toISOString().slice(0, 10)}.json` });
   a.click(); URL.revokeObjectURL(a.href);
 });
-document.getElementById('dalvrij').addEventListener('change', e => {
-  perfil = e.target.checked ? ['dalvrij'] : []; guardar('perfil', perfil); desenhar();
-});
+document.getElementById('dalvrij').addEventListener('change', e => { guardar('dalvrij', e.target.checked); desenhar(); });
+document.getElementById('destino').addEventListener('change', e => { destino = e.target.value; guardar('destino', destino); desenhar(); });
 sel.addEventListener('change', () => { guardar('simular', sel.value); fatos = {}; desenhar(); });
 document.getElementById('modo').addEventListener('change', e => { modo = e.target.value; guardar('modo', modo); desenhar(); });
 document.getElementById('voz').addEventListener('change', e => { voz = e.target.checked; guardar('voz', voz); falado = ''; if (voz) falar('Avisos por voz ligados.'); });

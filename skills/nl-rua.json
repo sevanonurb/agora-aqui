@@ -1,0 +1,197 @@
+{
+ "id": "nl-rua",
+ "pais": "nl",
+ "dominio": "rua",
+ "nome": "Vida na rua: água, banheiro, bike, língua",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "HogeNood",
+   "url": "https://www.hogenood.nl",
+   "tipo": "app"
+  }
+ ],
+ "lugares": {
+  "duivendrecht": {
+   "nome": "Duivendrecht",
+   "lat": 52.32358,
+   "lon": 4.93647
+  },
+  "ams-centraal": {
+   "nome": "Amsterdam Centraal",
+   "lat": 52.3789,
+   "lon": 4.90058
+  },
+  "diemen-zuid": {
+   "nome": "Diemen Zuid",
+   "lat": 52.33015,
+   "lon": 4.95611
+  },
+  "ams-rai": {
+   "nome": "Amsterdam RAI",
+   "lat": 52.33703,
+   "lon": 4.89022
+  },
+  "ams-zuid": {
+   "nome": "Amsterdam Zuid",
+   "lat": 52.3388,
+   "lon": 4.87319
+  }
+ },
+ "cartoes": [
+  {
+   "id": "agua",
+   "titulo": "Água de graça: há mais de 500 torneiras em Amsterdã",
+   "condicao": {},
+   "o_que": "A água da torneira é potável. Há mais de 500 torneiras públicas e grátis, abertas 24h.",
+   "por_que": "Ninguém conta isso para quem chega, e a água em garrafa é cara.",
+   "faca": [
+    "No Google Maps, busque \"Water Tap\"",
+    "Ou abra o mapa da Waternet"
+   ],
+   "frase_nl": {
+    "nl": "Mag ik mijn fles hier vullen?",
+    "pt": "Posso encher minha garrafa aqui?"
+   },
+   "fontes": [
+    {
+     "nome": "Waternet",
+     "url": "https://www.waternet.nl/en/service-and-contact/tap-water/can-you-drink-tap-water-in-amsterdam/",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-10-01",
+   "acoes": [
+    {
+     "rotulo": "Torneiras de água",
+     "url": "https://www.amsterdam.nl/en/drinking-water-taps/"
+    }
+   ]
+  },
+  {
+   "id": "banheiro",
+   "titulo": "Banheiro: na estação é pago, e o HogeNood mostra os outros",
+   "condicao": {
+    "perto_de": [
+     "diemen-zuid",
+     "duivendrecht",
+     "ams-zuid",
+     "ams-rai",
+     "ams-centraal"
+    ],
+    "raio_m": 400
+   },
+   "o_que": "Nas estações grandes o banheiro custa cerca de € 1,10 e é de uma empresa terceirizada. O app HogeNood (você já tem) mostra quais são pagos ou grátis.",
+   "por_que": "Não há lei sobre o preço, e cada lugar cobra diferente.",
+   "faca": [
+    "Abra o HogeNood",
+    "Na estação, procure a placa \"Toiletten\""
+   ],
+   "frase_nl": {
+    "nl": "Waar is het toilet?",
+    "pt": "Onde fica o banheiro?"
+   },
+   "fontes": [
+    {
+     "nome": "AVROTROS Radar",
+     "url": "https://radar.avrotros.nl/artikel/hoge-nood-wat-is-een-redelijke-prijs-voor-een-openbaar-toilet-62859",
+     "autoridade": "imprensa"
+    }
+   ],
+   "valido_ate": "2027-01-01",
+   "acoes": [
+    {
+     "rotulo": "Abrir HogeNood",
+     "url": "https://www.hogenood.nl"
+    }
+   ]
+  },
+  {
+   "id": "ciclovia",
+   "titulo": "Asfalto vermelho é ciclovia: não ande nela",
+   "condicao": {},
+   "o_que": "A faixa vermelha é das bicicletas. Pedestre nela é o motivo mais comum de alguém gritar com você.",
+   "por_que": "As bicicletas vêm rápido e esperam que a faixa esteja livre. O sino é o aviso.",
+   "faca": [
+    "Ouviu um sino: saia da faixa vermelha",
+    "Atravesse olhando para os dois lados da ciclovia"
+   ],
+   "frase_nl": {
+    "nl": "Sorry!",
+    "pt": "Desculpa!"
+   },
+   "fontes": [
+    {
+     "nome": "Leiden International Centre",
+     "url": "https://www.leideninternationalcentre.nl/get-advice/blogs/surviving-and-enjoying-dutch-cycling-culture",
+     "autoridade": "blog"
+    }
+   ],
+   "valido_ate": "2027-10-01"
+  },
+  {
+   "id": "lingua-aviso",
+   "titulo": "Alguém falou com você em holandês e você não entendeu",
+   "condicao": {},
+   "o_que": "Pergunte em holandês se está fazendo algo errado. Quase todo mundo responde em inglês.",
+   "por_que": "O aviso de \"você está no lugar errado\" vem de pessoas, na hora, em holandês. O alerta oficial de emergência (NL-Alert) chega em inglês.",
+   "faca": [
+    "Use as frases abaixo",
+    "Google Tradutor: modo conversa, ou tradução ao vivo pelo fone (holandês ainda não confirmado)"
+   ],
+   "frase_nl": {
+    "nl": "Sorry, ik spreek geen Nederlands. Doe ik iets verkeerd?",
+    "pt": "Desculpe, não falo holandês. Estou fazendo algo errado?"
+   },
+   "fontes": [
+    {
+     "nome": "NL-Alert (Zeeland)",
+     "url": "https://www.zeeland.com/en/visit/plan-your-trip/safety-messaging",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-10-01",
+   "acoes": [
+    {
+     "rotulo": "Google Tradutor",
+     "url": "https://translate.google.com/?sl=nl&tl=pt"
+    }
+   ]
+  },
+  {
+   "id": "stilte",
+   "titulo": "Vagão com \"Stilte\": é silêncio total",
+   "condicao": {
+    "perto_de": [
+     "diemen-zuid",
+     "duivendrecht",
+     "ams-zuid",
+     "ams-rai",
+     "ams-centraal"
+    ],
+    "raio_m": 250
+   },
+   "o_que": "Vagões marcados \"Stilte\" são de silêncio: sem ligação, sem conversa, sem som no celular.",
+   "por_que": "É regra não escrita para quem chega e escrita para quem mora lá: as pessoas vão pedir silêncio.",
+   "faca": [
+    "Para falar ao telefone, escolha outro vagão"
+   ],
+   "frase_nl": {
+    "nl": "Is dit een stiltecoupé?",
+    "pt": "Este é o vagão do silêncio?"
+   },
+   "fontes": [
+    {
+     "nome": "Univers — guia dos trens",
+     "url": "https://universonline.nl/?p=17170",
+     "autoridade": "blog"
+    }
+   ],
+   "valido_ate": "2027-10-01"
+  }
+ ]
+}

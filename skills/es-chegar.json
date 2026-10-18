@@ -1,0 +1,85 @@
+{
+ "id": "es-chegar",
+ "pais": "es",
+ "dominio": "chegar",
+ "nome": "Chegar na Espanha",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "Administración (cita previa)",
+   "url": "https://icp.administracionelectronica.gob.es",
+   "tipo": "link"
+  }
+ ],
+ "lugares": {},
+ "cartoes": [
+  {
+   "id": "es-empadronamiento",
+   "titulo": "Primeiro passo na Espanha: o empadronamiento (padrón)",
+   "condicao": {
+    "perfil": "espanha"
+   },
+   "o_que": "O 'empadronamiento' registra você no município onde mora. É a base para quase tudo: NIE, saúde, escola, conta.",
+   "por_que": "Sem o certificado de empadronamiento (volante), outros trâmites travam.",
+   "faca": [
+    "Marque a cita previa no site do seu ayuntamiento",
+    "Leve passaporte + contrato de aluguel ou carta do proprietário",
+    "Peça o 'volante de empadronamiento' — é o comprovante que pedem depois"
+   ],
+   "frase_nl": {
+    "nl": "Necesito cita para empadronarme",
+    "pt": "Preciso de hora marcada para o empadronamiento"
+   },
+   "fontes": [
+    {
+     "nome": "Portal de administración",
+     "url": "https://administracion.gob.es",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-07-01",
+   "acoes": [
+    {
+     "rotulo": "Cita previa",
+     "url": "https://icp.administracionelectronica.gob.es"
+    }
+   ]
+  },
+  {
+   "id": "es-nie",
+   "titulo": "O NIE é o seu número para tudo na Espanha",
+   "condicao": {
+    "perfil": "espanha"
+   },
+   "o_que": "O NIE (Número de Identidad de Extranjero) é exigido para trabalhar, abrir conta, assinar contrato.",
+   "por_que": "Nada formal acontece sem NIE; a cita previa some rápido, marque cedo.",
+   "faca": [
+    "Marque a cita previa (trámite: policía / NIE)",
+    "Preencha o modelo EX-15 e pague a taxa (modelo 790-012)",
+    "Leve passaporte e o motivo documentado (oferta, matrícula)"
+   ],
+   "frase_nl": {
+    "nl": "Quiero solicitar el NIE",
+    "pt": "Quero solicitar o NIE"
+   },
+   "fontes": [
+    {
+     "nome": "Administración — extranjería",
+     "url": "https://administracion.gob.es",
+     "autoridade": "oficial"
+    }
+   ],
+   "valido_ate": "2027-07-01",
+   "acoes": [
+    {
+     "rotulo": "Cita previa (NIE)",
+     "url": "https://icp.administracionelectronica.gob.es"
+    }
+   ]
+  }
+ ]
+}

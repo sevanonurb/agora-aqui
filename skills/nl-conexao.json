@@ -1,0 +1,53 @@
+{
+ "id": "nl-conexao",
+ "pais": "nl",
+ "dominio": "conexao",
+ "nome": "Internet e chip",
+ "versao": "1.0",
+ "licenca": "EUPL-1.2",
+ "mantenedores": [
+  "agora-aqui"
+ ],
+ "fontes_skill": [
+  {
+   "nome": "Lebara",
+   "url": "https://www.lebara.nl",
+   "tipo": "app"
+  }
+ ],
+ "lugares": {},
+ "cartoes": [
+  {
+   "id": "esim-sem-dados",
+   "titulo": "Tem sinal mas não tem internet? eSIM de viagem pode falhar",
+   "condicao": {
+    "perfil": "recem"
+   },
+   "o_que": "Um eSIM de viagem pode mostrar rede e saldo, ser DEBITADO, e mesmo assim não passar dados — o aparelho envia e não recebe nada.",
+   "por_que": "Se o ponto de presença (POP) do provedor não responde, o tráfego sai e não volta.",
+   "faca": [
+    "Não dependa só do eSIM: use o Wi-Fi onde houver",
+    "Rode o diagnóstico no app do provedor e veja se há POP respondendo",
+    "Para ficar: um chip pré-pago local (Lebara, Lycamobile, Simyo) ativa na hora e é barato"
+   ],
+   "frase_nl": {
+    "nl": "Ik heb bereik maar geen internet",
+    "pt": "Tenho sinal mas não tenho internet"
+   },
+   "fontes": [
+    {
+     "nome": "observado out/2026 (eSIM: RX=0 com saldo)",
+     "url": "",
+     "autoridade": "medido"
+    }
+   ],
+   "valido_ate": "2027-12-31",
+   "acoes": [
+    {
+     "rotulo": "Chip local (Lebara)",
+     "url": "https://www.lebara.nl/en.html"
+    }
+   ]
+  }
+ ]
+}
